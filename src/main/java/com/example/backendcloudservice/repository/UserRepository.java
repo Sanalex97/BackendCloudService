@@ -1,10 +1,8 @@
 package com.example.backendcloudservice.repository;
 
+import com.example.backendcloudservice.eception.InputData;
 import com.example.backendcloudservice.model.FileEntity;
 import com.example.backendcloudservice.model.User;
-import com.example.backendcloudservice.model.UserFile;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +18,6 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     UserCrudRepo userCrudRepo;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -31,10 +25,6 @@ public class UserRepository {
     public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
-   /* public UserRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }*/
 
     public JSONObject getUserAuthorization(User user) {
         String script = read("isAuthorization.sql");
@@ -64,6 +54,10 @@ public class UserRepository {
     }
 
     public void uploadFile(String fileName, MultipartFile multipartFile) throws IOException {
+        if (userCrudRepo.findByName(fileName) != null) {
+            throw new InputData("Error input data");
+        }
+
         String prefix = fileName.substring(fileName.lastIndexOf("."));
         File file = File.createTempFile(fileName, prefix);
         multipartFile.transferTo(file);
@@ -71,54 +65,60 @@ public class UserRepository {
         FileEntity fileEntity = new FileEntity(fileName, file);
 
         userCrudRepo.save(fileEntity);
-        //todo загрузка файла в БД
-
     }
 
     public void deletingFile(String fileName) {
-        //todo удаление файла из БД
-        System.out.println("deletingggggggg");
         System.out.println("deleting name file = " + userCrudRepo.findByName(fileName));
+        if (userCrudRepo.findByName(fileName) == null) {
+            throw new InputData("Error input data");
+        }
+
         userCrudRepo.delete(userCrudRepo.findByName(fileName));
-       /* for (FileEntity fileEntity : userCrudRepo.findAll()) {
-            if (fileEntity.getFile().getName().equals(fileName)) {
-                userCrudRepo.delete(fileEntity);
-                break;
-            }
-
-        }*/
     }
 
-    public boolean getFile(String name) {
-        //todo получение файла из БД
-        return true;
+    public JSONObject getFile(String fileName) throws IOException {
+        FileEntity fileEntity = userCrudRepo.findByName(fileName);
+
+        if (fileEntity == null) {
+            throw new InputData("Error input data");
+        }
+
+        FileInputStream input = new FileInputStream(fileEntity.getFile());
+
+        JSONObject myFile = new JSONObject();
+        myFile.put("hash", input.hashCode());
+        myFile.put("file", input.readAllBytes());
+
+        return myFile;
     }
 
-    public boolean editFileName(String name, String newName) {
-        //todo внесение изменений в имени файла в БД
-        return true;
+    public void editFileName(String fileName, String newFileName) {
+        System.out.println("file name = " + fileName);
+        System.out.println("newFileName = " + newFileName);
+
+        if (userCrudRepo.findByName(fileName) == null) {
+            throw new InputData("Error input data");
+        }
+        userCrudRepo.updateFileName(fileName, newFileName);
     }
 
     public JSONObject[] getAllFiles(Integer limit) {
-        //todo получение файлов из БД
         List<FileEntity> fileEntityList = userCrudRepo.findAll();
-        System.out.println("fileList = " + fileEntityList);
-        System.out.println("SIZE list = " + fileEntityList.size());
 
         JSONObject[] myFiles = new JSONObject[limit];
-        for(int i = 0 ; i < limit; i++) {
+        for (int i = 0; i < limit; i++) {
             myFiles[i] = new JSONObject();
         }
 
         int size = limit;
-        if(fileEntityList.size() < limit){
+        if (fileEntityList.size() < limit) {
             size = fileEntityList.size();
         }
 
         for (int i = 0; i < size; i++) {
             FileEntity file = fileEntityList.get(i);
             myFiles[i].put("filename", file.getName());
-            myFiles[i].put("size", (int)file.getFile().length());
+            myFiles[i].put("size", file.getFile().length());
         }
 
         return myFiles;
