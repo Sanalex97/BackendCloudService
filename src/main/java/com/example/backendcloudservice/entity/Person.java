@@ -1,12 +1,29 @@
-package com.example.backendcloudservice.model;
+package com.example.backendcloudservice.entity;
 
-public class User {
-    private Long id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "users", schema = "cloudservice")
+public class Person {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "auth-token")
     private String authToken;
 
-
+/*
     public void setId(Long id) {
         this.id = id;
     }
@@ -25,7 +42,7 @@ public class User {
 
     public String getAuthToken() {
         return authToken;
-    }
+    }*/
 
     @Override
     public String toString() {

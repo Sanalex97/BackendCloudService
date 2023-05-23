@@ -1,29 +1,27 @@
-package com.example.backendcloudservice.model;
+package com.example.backendcloudservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.File;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Table(name = "files", schema = "cloudservice")
-public class FileEntity {
+public class UserFile {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private long id;
 
     @Column(name = "name")
     private String name;
     @Column(name = "file")
-    private File file;
+    private java.io.File file;
 
-    public FileEntity(String name, File file) {
+    public UserFile(String name, java.io.File file) {
         this.name = name;
         this.file = file;
     }
@@ -32,7 +30,7 @@ public class FileEntity {
         return name;
     }
 
-    public File getFile() {
+    public java.io.File getFile() {
         return file;
     }
 

@@ -2,7 +2,7 @@ package com.example.backendcloudservice.service;
 
 import com.example.backendcloudservice.eception.InputData;
 import com.example.backendcloudservice.eception.UnauthorizedUser;
-import com.example.backendcloudservice.model.User;
+import com.example.backendcloudservice.entity.Person;
 import com.example.backendcloudservice.repository.UserRepository;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -14,19 +14,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CloudService {
     UserRepository userRepository;
-    private ConcurrentHashMap<String, User> hashToken = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Person> hashToken = new ConcurrentHashMap<>();
 
     public CloudService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
 
-    public JSONObject getUserAuthorization(User user) {
-        JSONObject authToken = userRepository.getUserAuthorization(user);
+    public JSONObject getUserAuthorization(Person person) {
+        JSONObject authToken = userRepository.getUserAuthorization(person);
         if (authToken == null) {
             throw new InputData("Bad credentials");
         }
-        hashToken.put(authToken.get("auth-token").toString(), user);
+        hashToken.put(authToken.get("auth-token").toString(), person);
         return authToken;
     }
 

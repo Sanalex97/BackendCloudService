@@ -1,8 +1,8 @@
 package com.example.backendcloudservice.repository;
 
 import com.example.backendcloudservice.eception.InputData;
-import com.example.backendcloudservice.model.FileEntity;
-import com.example.backendcloudservice.model.User;
+import com.example.backendcloudservice.entity.Person;
+import com.example.backendcloudservice.entity.UserFile;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -11,23 +11,25 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
     @Autowired
-    UserCrudRepo userCrudRepo;
+    UserFileRepo userFileRepo;
+
+    @Autowired
+    PersonRepo personRepo;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public JSONObject getUserAuthorization(User user) {
-        String script = read("isAuthorization.sql");
+    public JSONObject getUserAuthorization(Person person) {
+
+     /*   String script = read("isAuthorization.sql");
         Map<String, String> params = new HashMap<>();
         params.put("login", user.getLogin());
         params.put("password", user.getPassword());
@@ -41,6 +43,7 @@ public class UserRepository {
             authToken.put("auth-token", list.get(0));
             return authToken;
         }
+        return null;*/
         return null;
     }
 
@@ -54,36 +57,36 @@ public class UserRepository {
     }
 
     public void uploadFile(String fileName, MultipartFile multipartFile) throws IOException {
-        if (userCrudRepo.findByName(fileName) != null) {
+        if (userFileRepo.findByName(fileName) != null) {
             throw new InputData("Error input data");
         }
 
         String prefix = fileName.substring(fileName.lastIndexOf("."));
-        File file = File.createTempFile(fileName, prefix);
+        java.io.File file = java.io.File.createTempFile(fileName, prefix);
         multipartFile.transferTo(file);
 
-        FileEntity fileEntity = new FileEntity(fileName, file);
+        UserFile userFile = new UserFile(fileName, file);
 
-        userCrudRepo.save(fileEntity);
+        userFileRepo.save(userFile);
     }
 
     public void deletingFile(String fileName) {
-        System.out.println("deleting name file = " + userCrudRepo.findByName(fileName));
-        if (userCrudRepo.findByName(fileName) == null) {
+        System.out.println("deleting name file = " + userFileRepo.findByName(fileName));
+        if (userFileRepo.findByName(fileName) == null) {
             throw new InputData("Error input data");
         }
 
-        userCrudRepo.delete(userCrudRepo.findByName(fileName));
+        userFileRepo.delete(userFileRepo.findByName(fileName));
     }
 
     public JSONObject getFile(String fileName) throws IOException {
-        FileEntity fileEntity = userCrudRepo.findByName(fileName);
+        UserFile userFile = userFileRepo.findByName(fileName);
 
-        if (fileEntity == null) {
+        if (userFile == null) {
             throw new InputData("Error input data");
         }
 
-        FileInputStream input = new FileInputStream(fileEntity.getFile());
+        FileInputStream input = new FileInputStream(userFile.getFile());
 
         JSONObject myFile = new JSONObject();
         myFile.put("hash", input.hashCode());
@@ -96,14 +99,14 @@ public class UserRepository {
         System.out.println("file name = " + fileName);
         System.out.println("newFileName = " + newFileName);
 
-        if (userCrudRepo.findByName(fileName) == null) {
+        if (userFileRepo.findByName(fileName) == null) {
             throw new InputData("Error input data");
         }
-        userCrudRepo.updateFileName(fileName, newFileName);
+        userFileRepo.updateFileName(fileName, newFileName);
     }
 
     public JSONObject[] getAllFiles(Integer limit) {
-        List<FileEntity> fileEntityList = userCrudRepo.findAll();
+        List<UserFile> userFileList = userFileRepo.findAll();
 
         JSONObject[] myFiles = new JSONObject[limit];
         for (int i = 0; i < limit; i++) {
@@ -111,14 +114,14 @@ public class UserRepository {
         }
 
         int size = limit;
-        if (fileEntityList.size() < limit) {
-            size = fileEntityList.size();
+        if (userFileList.size() < limit) {
+            size = userFileList.size();
         }
 
         for (int i = 0; i < size; i++) {
-            FileEntity file = fileEntityList.get(i);
-            myFiles[i].put("filename", file.getName());
-            myFiles[i].put("size", file.getFile().length());
+            UserFile userFile = userFileList.get(i);
+            myFiles[i].put("filename", userFile.getName());
+            myFiles[i].put("size", userFile.getFile().length());
         }
 
         return myFiles;

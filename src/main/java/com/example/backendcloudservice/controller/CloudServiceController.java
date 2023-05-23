@@ -1,6 +1,7 @@
+/*
 package com.example.backendcloudservice.controller;
 
-import com.example.backendcloudservice.model.User;
+import com.example.backendcloudservice.entity.User;
 import com.example.backendcloudservice.service.CloudService;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,8 @@ public class CloudServiceController {
         this.cloudService = cloudService;
     }
 
-    @PostMapping("/login")
+   */
+/* @PostMapping("/login")
     public JSONObject authorization(@RequestBody User user) {
         System.out.println(user);
         return cloudService.getUserAuthorization(user);
@@ -28,9 +30,11 @@ public class CloudServiceController {
     public void deletingToken(@RequestHeader(name = "auth-token") String authToken) {
         System.out.println(authToken);
         cloudService.deletingToken(authToken.split(" ")[1]);
-    }
+    }*//*
 
-    @PostMapping("/file")
+
+   */
+/* @PostMapping("/file")
     public String uploadFileToServer(@RequestHeader(name = "auth-token") String authToken,
                                      @RequestParam(name = "filename") String fileName,
                                      @RequestPart("file") MultipartFile file) throws IOException {
@@ -65,5 +69,7 @@ public class CloudServiceController {
     public JSONObject[] getAllFiles(@RequestHeader(name = "auth-token") String authToken, @RequestParam(name = "limit") Integer limit) {
         System.out.println("limit = " + limit);
         return cloudService.getAllFiles(authToken.split(" ")[1], limit);
-    }
+    }*//*
+
 }
+*/
