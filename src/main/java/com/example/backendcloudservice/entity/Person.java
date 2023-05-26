@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users", schema = "cloudservice")
-public class Person {
+@Table(name = "PERSONS", schema = "cloudservice")
+public class Person{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +25,25 @@ public class Person {
     @Column(name = "auth-token")
     private String authToken;
 
-/*
+    public Person(String login, String password, String authToken) {
+        this.login = login;
+        this.password = password;
+        this.authToken = authToken;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    /*
     public void setId(Long id) {
         this.id = id;
     }

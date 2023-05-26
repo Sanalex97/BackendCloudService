@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "files", schema = "cloudservice")
+@Table(name = "UserFiles", schema = "cloudservice")
 public class UserFile {
     @Id
     @Column(name = "id")
@@ -18,11 +18,14 @@ public class UserFile {
 
     @Column(name = "name")
     private String name;
+    @Column(name = "hash")
+    private String hash;
     @Column(name = "file")
-    private java.io.File file;
+    private byte[] file;
 
-    public UserFile(String name, java.io.File file) {
+    public UserFile(String name, String hash, byte[] file) {
         this.name = name;
+        this.hash = hash;
         this.file = file;
     }
 
@@ -30,8 +33,11 @@ public class UserFile {
         return name;
     }
 
-    public java.io.File getFile() {
-        return file;
+    public String getHash() {
+        return hash;
     }
 
+    public byte[] getFile() {
+        return file;
+    }
 }

@@ -23,7 +23,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(DeleteFile.class)
-    public ResponseEntity<String> delFeHandler(RuntimeException ex) {
+    public ResponseEntity<String> delFHandler(RuntimeException ex) {
         System.out.println(ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

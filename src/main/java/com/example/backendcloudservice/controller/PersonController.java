@@ -2,6 +2,7 @@ package com.example.backendcloudservice.controller;
 
 import com.example.backendcloudservice.entity.Person;
 import com.example.backendcloudservice.service.PersonService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,8 +15,9 @@ public class PersonController {
     }
 
     @PostMapping("/login")
-    public Person authorization(@RequestBody Person person) {
-        System.out.println(person);
+    @ResponseBody
+    public ResponseEntity authorization(@RequestBody Person person) {
+        System.out.println("PERSON === " + person);
         return personService.getUserAuthorization(person);
     }
 

@@ -65,9 +65,9 @@ public class UserRepository {
         java.io.File file = java.io.File.createTempFile(fileName, prefix);
         multipartFile.transferTo(file);
 
-        UserFile userFile = new UserFile(fileName, file);
+      //  UserFile userFile = new UserFile(fileName, file);
 
-        userFileRepo.save(userFile);
+      //  userFileRepo.save(userFile);
     }
 
     public void deletingFile(String fileName) {
@@ -80,7 +80,7 @@ public class UserRepository {
     }
 
     public JSONObject getFile(String fileName) throws IOException {
-        UserFile userFile = userFileRepo.findByName(fileName);
+      /*  UserFile userFile = userFileRepo.findByName(fileName);
 
         if (userFile == null) {
             throw new InputData("Error input data");
@@ -92,7 +92,8 @@ public class UserRepository {
         myFile.put("hash", input.hashCode());
         myFile.put("file", input.readAllBytes());
 
-        return myFile;
+        return myFile;*/
+        return null;
     }
 
     public void editFileName(String fileName, String newFileName) {
@@ -106,7 +107,7 @@ public class UserRepository {
     }
 
     public JSONObject[] getAllFiles(Integer limit) {
-        List<UserFile> userFileList = userFileRepo.findAll();
+     /*   List<UserFile> userFileList = userFileRepo.findAll();
 
         JSONObject[] myFiles = new JSONObject[limit];
         for (int i = 0; i < limit; i++) {
@@ -122,9 +123,9 @@ public class UserRepository {
             UserFile userFile = userFileList.get(i);
             myFiles[i].put("filename", userFile.getName());
             myFiles[i].put("size", userFile.getFile().length());
-        }
+        }*/
 
-        return myFiles;
+        return null;
     }
 
 }

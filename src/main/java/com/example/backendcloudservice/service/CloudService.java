@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -76,6 +77,7 @@ public class CloudService {
         if (!hashToken.containsKey(authToken)) {
             throw new UnauthorizedUser("Unauthorized error");
         }
+
         return userRepository.getAllFiles(limit);
     }
 }
