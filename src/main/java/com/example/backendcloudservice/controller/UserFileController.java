@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/file")
+//@RequestMapping("/file")
 public class UserFileController {
     private final UserFileService userFileService;
 
@@ -24,37 +24,32 @@ public class UserFileController {
         this.userFileService = userFileService;
     }
 
-    @PostMapping
-    public String uploadFileToServer(@RequestHeader(name = "auth-token") String authToken,
-                                     @RequestParam(name = "filename") String fileName,
-                                     @RequestPart File request
-                                    /* @RequestParam("file") MultipartFile file1,
-                                     @RequestHeader(name = "hash")String hash,
-                                     @RequestHeader(name = "file")String file*/) throws IOException {
+    @PostMapping("/file")
+    public ResponseEntity uploadFileToServer(@RequestHeader(name = "auth-token") String authToken,
+                                             @RequestParam(name = "filename") String fileName,
+                                             @RequestPart("file") MultipartFile file) throws IOException {
 
 
-        System.out.println("hash ===== " + request);
-        File file = (File) request;
+        System.out.println("FILE === " + file);
+        return userFileService.uploadFile(authToken.split(" ")[1], fileName, file);
 
-//        //   userFileService.uploadFile(authToken.split(" ")[1], fileName, file);
-        return "Success upload";
     }
 
-    @DeleteMapping
+    @DeleteMapping("/file")
     public void deletingFile(@RequestHeader(name = "auth-token") String authToken,
                              @RequestParam(name = "filename") String fileName) {
         System.out.println("NAME = " + fileName);
         userFileService.deletingFile(authToken.split(" ")[1], fileName);
     }
 
-    @GetMapping
-    public UserFile getFile(@RequestHeader(name = "auth-token") String authToken,
+    @GetMapping("/file")
+    public ResponseEntity getFile(@RequestHeader(name = "auth-token") String authToken,
                             @RequestParam(name = "filename") String fileName) throws IOException {
         System.out.println("GET = " + fileName);
         return userFileService.getFile(authToken.split(" ")[1], fileName);
     }
 
-    @PutMapping
+    @PutMapping("/file")
     public void EditFileName(@RequestHeader(name = "auth-token") String authToken,
                              @RequestParam(name = "filename") String fileName,
                              @RequestBody String newFileName) {

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.File;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,12 +20,28 @@ public class UserFile {
 
     @Column(name = "name")
     private String name;
-    @Column(name = "hash")
-    private String hash;
+    /*  @Column(name = "hash")
+      private String hash;*/
     @Column(name = "file")
-    private byte[] file;
+    private File file;
 
-    public UserFile(String name, String hash, byte[] file) {
+    public UserFile(String name, File file) {
+        this.name = name;
+        this.file = file;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public File getFile() {
+        return file;
+    }
+/*  public UserFile(String name, String hash, byte[] file) {
         this.name = name;
         this.hash = hash;
         this.file = file;
@@ -39,5 +57,5 @@ public class UserFile {
 
     public byte[] getFile() {
         return file;
-    }
+    }*/
 }

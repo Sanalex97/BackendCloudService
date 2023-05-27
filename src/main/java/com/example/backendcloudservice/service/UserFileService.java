@@ -8,12 +8,17 @@ import com.example.backendcloudservice.repository.UserFileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -21,17 +26,18 @@ public class UserFileService {
     @Autowired
     UserFileRepo userFileRepo;
 
-    public String uploadFile(String authToken, String fileName, MultipartFile file) throws IOException {
+    public ResponseEntity uploadFile(String authToken, String fileName, MultipartFile file) throws IOException {
         if (isError(authToken, fileName)) {
-            if (userFileRepo.findByName(fileName) == null) {
+            if (userFileRepo.findByName(fileName) != null) {
                 throw new InputData("Error input data");
             }
             String prefix = fileName.substring(fileName.lastIndexOf("."));
             File file1 = File.createTempFile(fileName, prefix);
             file.transferTo(file1);
-            // userFileRepo.save(new UserFile(fileName,file.getBytes()));
+            System.out.println(file1);
+            userFileRepo.save(new UserFile(fileName, file1));
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public void deletingFile(String authToken, String fileName) {
@@ -44,13 +50,27 @@ public class UserFileService {
         }
     }
 
-    public UserFile getFile(String authToken, String fileName) {
+    public ResponseEntity getFile(String authToken, String fileName) throws IOException {
         if (isError(authToken, fileName)) {
             UserFile userFile = userFileRepo.findByName(fileName);
             if (userFile == null) {
                 throw new InputData("Error input data");
             }
-            return userFile;
+
+            File file = userFile.getFile();
+            Path path = Paths.get(file.getPath());
+            String name = file.getName();
+            String originalFileName = file.getName();
+            String contentType = Files.probeContentType(file.toPath());
+            byte[] content = null;
+            try {
+                content = Files.readAllBytes(path);
+            } catch (final IOException e) {
+            }
+            MultipartFile result = new MockMultipartFile(name,
+                    originalFileName, contentType, content);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         return null;
     }
@@ -68,7 +88,7 @@ public class UserFileService {
         if (!PersonService.getHashToken().containsKey(authToken)) {
             throw new UnauthorizedUser("Unauthorized error");
         }
-        List<UserFile> userFileLimitList = new ArrayList<>();
+
         List<UserFile> userFileList = userFileRepo.findAll();
 
         System.out.println("FINDALL === " + userFileRepo.findAll());
@@ -77,9 +97,21 @@ public class UserFileService {
             throw new DeleteFile("Error getting file list");
         }
 
-        for (int i = 0; i < limit; i++) {
-            userFileLimitList.add(userFileList.get(i));
+        List<HashMap<String, Object>> userFileLimitList = new ArrayList<>();
+
+        int size = limit;
+        if (userFileList.size() < limit) {
+            size = userFileList.size();
         }
+
+        for (int i = 0; i < size; i++) {
+            UserFile userFile = userFileList.get(i);
+            HashMap<String, Object> personFiles = new HashMap<>();
+            personFiles.put("filename", userFile.getName());
+            personFiles.put("size", userFile.getFile().length());
+            userFileLimitList.add(personFiles);
+        }
+        System.out.println("USERFILELIMIT === " + userFileLimitList);
         return new ResponseEntity<>(userFileLimitList, HttpStatus.OK);
     }
 
