@@ -17,11 +17,8 @@ public class UserFile {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "name")
     private String name;
-    /*  @Column(name = "hash")
-      private String hash;*/
     @Column(name = "file")
     private File file;
 
@@ -41,21 +38,6 @@ public class UserFile {
     public File getFile() {
         return file;
     }
-/*  public UserFile(String name, String hash, byte[] file) {
-        this.name = name;
-        this.hash = hash;
-        this.file = file;
-    }
 
-    public String getName() {
-        return name;
-    }
 
-    public String getHash() {
-        return hash;
-    }
-
-    public byte[] getFile() {
-        return file;
-    }*/
 }

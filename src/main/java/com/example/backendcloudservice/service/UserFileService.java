@@ -5,18 +5,19 @@ import com.example.backendcloudservice.eception.InputData;
 import com.example.backendcloudservice.eception.UnauthorizedUser;
 import com.example.backendcloudservice.entity.UserFile;
 import com.example.backendcloudservice.repository.UserFileRepo;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +27,15 @@ public class UserFileService {
     @Autowired
     UserFileRepo userFileRepo;
 
-    public ResponseEntity uploadFile(String authToken, String fileName, MultipartFile file) throws IOException {
+    public ResponseEntity uploadFile(String authToken, String fileName, MultipartFile file) throws IOException, NoSuchAlgorithmException {
         if (isError(authToken, fileName)) {
             if (userFileRepo.findByName(fileName) != null) {
                 throw new InputData("Error input data");
             }
-            String prefix = fileName.substring(fileName.lastIndexOf("."));
-            File file1 = File.createTempFile(fileName, prefix);
-            file.transferTo(file1);
-            System.out.println(file1);
-            userFileRepo.save(new UserFile(fileName, file1));
+            InputStream in = file.getInputStream();
+            java.io.File uploadFile = File.createTempFile(fileName, fileName.split("\\.")[1]);
+            FileUtils.copyInputStreamToFile(in, uploadFile);
+            userFileRepo.save(new UserFile(fileName, uploadFile));
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -50,27 +50,16 @@ public class UserFileService {
         }
     }
 
-    public ResponseEntity getFile(String authToken, String fileName) throws IOException {
+    public ResponseEntity getFile(String authToken, String fileName) throws IOException, NoSuchAlgorithmException {
         if (isError(authToken, fileName)) {
             UserFile userFile = userFileRepo.findByName(fileName);
             if (userFile == null) {
                 throw new InputData("Error input data");
             }
-
             File file = userFile.getFile();
-            Path path = Paths.get(file.getPath());
-            String name = file.getName();
-            String originalFileName = file.getName();
-            String contentType = Files.probeContentType(file.toPath());
-            byte[] content = null;
-            try {
-                content = Files.readAllBytes(path);
-            } catch (final IOException e) {
-            }
-            MultipartFile result = new MockMultipartFile(name,
-                    originalFileName, contentType, content);
+            InputStream in = new FileInputStream(file);
 
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return ResponseEntity.ok().body(new InputStreamResource(in));
         }
         return null;
     }
@@ -84,14 +73,12 @@ public class UserFileService {
         }
     }
 
-    public ResponseEntity getAllFiles(String authToken, Integer limit) {
+    public ResponseEntity getAllFiles(String authToken, Integer limit) throws IOException {
         if (!PersonService.getHashToken().containsKey(authToken)) {
             throw new UnauthorizedUser("Unauthorized error");
         }
 
         List<UserFile> userFileList = userFileRepo.findAll();
-
-        System.out.println("FINDALL === " + userFileRepo.findAll());
 
         if (userFileList.isEmpty()) {
             throw new DeleteFile("Error getting file list");
@@ -111,7 +98,7 @@ public class UserFileService {
             personFiles.put("size", userFile.getFile().length());
             userFileLimitList.add(personFiles);
         }
-        System.out.println("USERFILELIMIT === " + userFileLimitList);
+
         return new ResponseEntity<>(userFileLimitList, HttpStatus.OK);
     }
 
