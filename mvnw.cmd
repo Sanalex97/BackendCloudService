@@ -1,10 +1,10 @@
 @REM ----------------------------------------------------------------------------
 @REM Licensed to the Apache Software Foundation (ASF) under one
-@REM or more contributor license agreements.  See the NOTICE userFile
+@REM or more contributor license agreements.  See the NOTICE filesStorage
 @REM distributed with this work for additional information
-@REM regarding copyright ownership.  The ASF licenses this userFile
+@REM regarding copyright ownership.  The ASF licenses this filesStorage
 @REM to you under the Apache License, Version 2.0 (the
-@REM "License"); you may not use this userFile except in compliance
+@REM "License"); you may not use this filesStorage except in compliance
 @REM with the License.  You may obtain a copy of the License at
 @REM
 @REM    https://www.apache.org/licenses/LICENSE-2.0
@@ -30,7 +30,7 @@
 @REM MAVEN_OPTS - parameters passed to the Java VM when running Maven
 @REM     e.g. to debug Maven itself, use
 @REM set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
-@REM MAVEN_SKIP_RC - flag to disable loading of mavenrc userFile
+@REM MAVEN_SKIP_RC - flag to disable loading of mavenrc filesStorage
 @REM ----------------------------------------------------------------------------
 
 @REM Begin all REM lines with '@' in case MAVEN_BATCH_ECHO is 'on'

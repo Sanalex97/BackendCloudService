@@ -1,6 +1,6 @@
 package com.example.backendcloudservice.controller;
 
-import com.example.backendcloudservice.service.UserFileService;
+import com.example.backendcloudservice.service.FilesStorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +11,11 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 @CrossOrigin
-//@RequestMapping("/file")
-public class UserFileController {
-    private final UserFileService userFileService;
+public class FilesController {
+    private final FilesStorageService filesStorageService;
 
-    public UserFileController(UserFileService userFileService) {
-        this.userFileService = userFileService;
+    public FilesController(FilesStorageService filesStorageService) {
+        this.filesStorageService = filesStorageService;
     }
 
     @PostMapping("/file")
@@ -24,7 +23,7 @@ public class UserFileController {
                                              @RequestParam(name = "filename") String fileName,
                                              @RequestPart("file") MultipartFile file) throws IOException, NoSuchAlgorithmException {
 
-        return userFileService.uploadFile(authToken.split(" ")[1], fileName, file);
+        return filesStorageService.uploadFile(authToken.split(" ")[1], fileName, file);
 
     }
 
@@ -32,7 +31,7 @@ public class UserFileController {
     public ResponseEntity deletingFile(@RequestHeader(name = "auth-token") String authToken,
                                        @RequestParam(name = "filename") String fileName) {
 
-        userFileService.deletingFile(authToken.split(" ")[1], fileName);
+        filesStorageService.deletingFile(authToken.split(" ")[1], fileName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -40,7 +39,7 @@ public class UserFileController {
     public ResponseEntity getFile(@RequestHeader(name = "auth-token") String authToken,
                                   @RequestParam(name = "filename") String fileName) throws IOException, NoSuchAlgorithmException {
 
-        return userFileService.getFile(authToken.split(" ")[1], fileName);
+        return filesStorageService.getFile(authToken.split(" ")[1], fileName);
     }
 
     @PutMapping("/file")
@@ -49,13 +48,12 @@ public class UserFileController {
                                        @RequestBody String newFileName) {
 
         newFileName = newFileName.split(":")[1];
-        userFileService.editFileName(authToken.split(" ")[1], fileName, newFileName.substring(1, newFileName.length() - 2));
+        filesStorageService.editFileName(authToken.split(" ")[1], fileName, newFileName.substring(1, newFileName.length() - 2));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/list")
     public ResponseEntity getAllFiles(@RequestHeader(name = "auth-token") String authToken, @RequestParam(name = "limit") Integer limit) throws IOException {
-
-        return userFileService.getAllFiles(authToken.split(" ")[1], limit);
+        return filesStorageService.getAllFiles(authToken.split(" ")[1], limit);
     }
 }

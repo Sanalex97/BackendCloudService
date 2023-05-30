@@ -3,8 +3,9 @@ package com.example.backendcloudservice.service;
 import com.example.backendcloudservice.eception.DeleteFile;
 import com.example.backendcloudservice.eception.InputData;
 import com.example.backendcloudservice.eception.UnauthorizedUser;
-import com.example.backendcloudservice.entity.UserFile;
-import com.example.backendcloudservice.repository.UserFileRepo;
+import com.example.backendcloudservice.entity.FilesStorage;
+import com.example.backendcloudservice.repository.FilesStorageRepo;
+import com.example.backendcloudservice.repository.PersonRepo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -23,40 +24,43 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class UserFileService {
+public class FilesStorageService {
     @Autowired
-    UserFileRepo userFileRepo;
+    FilesStorageRepo filesStorageRepo;
+
+    @Autowired
+    PersonRepo personRepo;
 
     public ResponseEntity uploadFile(String authToken, String fileName, MultipartFile file) throws IOException, NoSuchAlgorithmException {
         if (isError(authToken, fileName)) {
-            if (userFileRepo.findByName(fileName) != null) {
+            if (filesStorageRepo.findByName(fileName) != null) {
                 throw new InputData("Error input data");
             }
             InputStream in = file.getInputStream();
             java.io.File uploadFile = File.createTempFile(fileName, fileName.split("\\.")[1]);
             FileUtils.copyInputStreamToFile(in, uploadFile);
-            userFileRepo.save(new UserFile(fileName, uploadFile));
+            filesStorageRepo.save(new FilesStorage(personRepo.getIdPerson(authToken), fileName, uploadFile));
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public void deletingFile(String authToken, String fileName) {
         if (isError(authToken, fileName)) {
-            UserFile userFile = userFileRepo.findByName(fileName);
-            if (userFile == null) {
+            FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
+            if (filesStorage == null) {
                 throw new InputData("Error input data");
             }
-            userFileRepo.delete(userFile);
+            filesStorageRepo.delete(filesStorage);
         }
     }
 
-    public ResponseEntity getFile(String authToken, String fileName) throws IOException, NoSuchAlgorithmException {
+    public ResponseEntity getFile(String authToken, String fileName) throws IOException {
         if (isError(authToken, fileName)) {
-            UserFile userFile = userFileRepo.findByName(fileName);
-            if (userFile == null) {
+            FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
+            if (filesStorage == null) {
                 throw new InputData("Error input data");
             }
-            File file = userFile.getFile();
+            File file = filesStorage.getFile();
             InputStream in = new FileInputStream(file);
 
             return ResponseEntity.ok().body(new InputStreamResource(in));
@@ -66,10 +70,10 @@ public class UserFileService {
 
     public void editFileName(String authToken, String fileName, String newFileName) {
         if (isError(authToken, fileName)) {
-            if (userFileRepo.findByName(fileName) == null) {
+            if (filesStorageRepo.findByName(fileName) == null) {
                 throw new InputData("Error input data");
             }
-            userFileRepo.updateFileName(fileName, newFileName);
+            filesStorageRepo.updateFileName(fileName, newFileName);
         }
     }
 
@@ -78,24 +82,24 @@ public class UserFileService {
             throw new UnauthorizedUser("Unauthorized error");
         }
 
-        List<UserFile> userFileList = userFileRepo.findAll();
+        List<FilesStorage> filesStorageList = filesStorageRepo.findAllByCustomerId(personRepo.getIdPerson(authToken));
 
-        if (userFileList.isEmpty()) {
+        if (filesStorageList.isEmpty()) {
             throw new DeleteFile("Error getting file list");
         }
 
         List<HashMap<String, Object>> userFileLimitList = new ArrayList<>();
 
         int size = limit;
-        if (userFileList.size() < limit) {
-            size = userFileList.size();
+        if (filesStorageList.size() < limit) {
+            size = filesStorageList.size();
         }
 
         for (int i = 0; i < size; i++) {
-            UserFile userFile = userFileList.get(i);
+            FilesStorage filesStorage = filesStorageList.get(i);
             HashMap<String, Object> personFiles = new HashMap<>();
-            personFiles.put("filename", userFile.getName());
-            personFiles.put("size", userFile.getFile().length());
+            personFiles.put("filename", filesStorage.getName());
+            personFiles.put("size", filesStorage.getFile().length());
             userFileLimitList.add(personFiles);
         }
 

@@ -11,18 +11,22 @@ import java.io.File;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "UserFiles", schema = "cloudservice")
-public class UserFile {
+@Table(name = "FilesStorage", schema = "cloudservice")
+public class FilesStorage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = " customerId")
+    private long customerId;
     @Column(name = "name")
     private String name;
     @Column(name = "file")
     private File file;
 
-    public UserFile(String name, File file) {
+    public FilesStorage(long customerId, String name, File file) {
+        this.customerId = customerId;
         this.name = name;
         this.file = file;
     }

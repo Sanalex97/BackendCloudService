@@ -26,4 +26,5 @@ public class PersonController {
         personService.deletingToken(authToken.split(" ")[1]);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
