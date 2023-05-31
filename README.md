@@ -26,7 +26,7 @@
 
 ## Как запустить и использовать проект
 ### Запуск BACKEND
-1. Скачайте <a href="https://nodejs.org/ru/download/current/"><strong>репозиторий</strong></a>.
+1. Скачайте <a href="https://github.com/Sanalex97/BackendCloudService.git"><strong>репозиторий</strong></a>.
 2. Запустите сервис.
 3. По умолчанию в базу данных добавлены 3 пользователя, которые могут пройти авторизацию:
    1. login: ```user1``` password: ```12345678```
