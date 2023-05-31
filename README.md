@@ -108,7 +108,15 @@ This is an example of how to list things you need to use the software and how to
 3. Перейдите в папку FRONT приложения и все команды для запуска выполняйте из неё.
 4. Следуя описанию README.md FRONT проекта, запустите nodejs-приложение (npm install, npm run serve).
 5. Далее нужно задать url для вызова backend-сервиса.
-   - В файле  ```.env``` FRONT (находится в корне проекта) приложения нужно изменить url до backend, например: ```VUE_APP_BASE_URL=http://localhost:8080 ```.
+   
+   5.1 В файле  ```.env``` FRONT (находится в корне проекта) приложения нужно изменить url до backend, например: ```VUE_APP_BASE_URL=http://localhost:8080 ```.
+   
+   -  Нужно указать корневой url вашего backend, к нему frontend будет добавлять все пути согласно спецификации 
+   -  Для  ```VUE_APP_BASE_URL=http://localhost:8080 ``` при выполнении логина frontend вызовет  ```http://localhost:8080/login ```
+
+   5.2 Запустите FRONT снова: ```npm run serve```.
+   
+   5.3 Изменённый  ```url``` сохранится для следующих запусков.
 
 
 
