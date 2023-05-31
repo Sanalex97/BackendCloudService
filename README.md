@@ -5,7 +5,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
   
-  <h3 align="center">Сервси для облачного хранилища</h3>
+  <h3 align="center">Сервис для облачного хранилища</h3>
 
   <p align="center">
     An awesome README template to jumpstart your projects!
@@ -86,27 +86,21 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Запуск проекта
-#### Описание и запуск FRONT
-1. Установите nodejs (версия не ниже 19.7.0) на компьютер, следуя <a href="https://nodejs.org/ru/download/current/"><strong>инструкции</strong></a>.
-
-2. Скачайте <a href="https://github.com/netology-code/jd-homeworks/blob/master/diploma/netology-diplom-frontend"><strong>FRONT</strong></a> (JavaScript).
-   
-3. Перейдите в папку FRONT приложения и все команды для запуска выполняйте из неё.
-4. Следуя описанию README.md FRONT проекта, запустите nodejs-приложение (npm install, npm run serve).
+### Как запустить и использовать проект
+#### Запуск BACKEND
+1. Скачайте <a href="https://nodejs.org/ru/download/current/"><strong>репозиторий</strong></a>
+2. Запустите сервис
+3. По умолчанию в базу данных добавлены 3 пользователя, которые могут пройти авторизацию:
+   1. login: ```user1``` password: ```12345678```
+   2. login: ```user2``` password: ```87654321```
+   3. login: ```user3``` password: ```12348765```
+4. Для добавления новых пользователей необходимо в классе ```BackendCloudServiceApplication``` в методе ```run(String... args)``` ввести данные новых пользователей.
+  
+#### Запуск FRONT
+1. Установите nodejs (версия не ниже 19.7.0) на компьютер, следуя <a href="https://nodejs.org/ru/download/current/"><strong>инструкции</strong></a>. 
+2. Скачайте <a href="https://github.com/netology-code/jd-homeworks/blob/master/diploma/netology-diplom-frontend"><strong>FRONT</strong></a> (JavaScript). 
+3. Перейдите в папку FRONT приложения и все команды для запуска выполняйте из неё. 
+4. Следуя описанию README.md FRONT проекта, запустите nodejs-приложение (```npm install```, ```npm run serve```). 
 5. Далее нужно задать url для вызова backend-сервиса.
    
    5.1 В файле  ```.env``` FRONT (находится в корне проекта) приложения нужно изменить url до backend, например: ```VUE_APP_BASE_URL=http://localhost:8080 ```.
@@ -117,6 +111,26 @@ This is an example of how to list things you need to use the software and how to
    5.2 Запустите FRONT снова: ```npm run serve```.
    
    5.3 Изменённый  ```url``` сохранится для следующих запусков.
+ 
+ 6. По умолчанию FRONT запускается на порту 8080 и доступен по url в браузере  ```http://localhost:8080```.
+    - Если порт 8080 занят, FRONT займёт следующий доступный ( ```8081```). После выполнения  ```npm run serve``` в терминале вы увидите, на каком порту он запустился.
+ 
+ #### Использование проекта
+ 1. Перейдите на страницу авторизации (по умочанию:```http://localhost:8081/login```).
+ 2. Введите логин и пароль пользователя, который может пройти авторизацию.
+ 3. Для загрузки файла в облачное хранилище необходимо нажать кнопку "```добавить```" и выбрать нужный файл.
+ 4. После загрузки файла появится возможность с помощью иконок:
+ 
+    <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/58667adb-f21d-43f0-903d-269127412230" width="20" height="20" /> - ```изменить имя файла```.
+  
+    <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/dd840968-64ba-4cec-80e7-069bbc7c9226" width="20" height="20" /> - ```скачать файл```.
+  
+    <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/0b077121-eb54-443d-9c33-3556cd68a0a9" width="20" height="20" /> - ```удалить файл```.
+  
+
+
+  
+
 
 
 
@@ -235,3 +249,5 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+
+
