@@ -1,0 +1,25 @@
+version: '1'
+
+services:
+  BACKEND:
+    image: 'backendcloudservice:latest'
+    ports:
+      - '8080:8080'
+    build: ./
+    depends_on:
+      - service-db
+    environment:
+          - SERVER_PORT= 8080
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/netology
+
+  service-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER={postgres}
+      - POSTGRES_PASSWORD={13111730}
+      - POSTGRES_DB={netology}
+    ports:
+    - "15432:5432"
+    restart: unless-stopped
+
+

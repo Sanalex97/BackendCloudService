@@ -2,13 +2,11 @@ package com.example.backendcloudservice.service;
 
 import com.example.backendcloudservice.eception.DeleteFile;
 import com.example.backendcloudservice.eception.InputData;
-import com.example.backendcloudservice.eception.UnauthorizedUser;
 import com.example.backendcloudservice.entity.FilesStorage;
 import com.example.backendcloudservice.repository.FilesStorageRepo;
 import com.example.backendcloudservice.repository.PersonRepo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,10 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 @Service
 public class FilesStorageService {
@@ -31,56 +29,49 @@ public class FilesStorageService {
     @Autowired
     PersonRepo personRepo;
 
-    public ResponseEntity uploadFile(String authToken, String fileName, MultipartFile file) throws IOException, NoSuchAlgorithmException {
-        if (isError(authToken, fileName)) {
-            if (filesStorageRepo.findByName(fileName) != null) {
-                throw new InputData("Error input data");
-            }
-            InputStream in = file.getInputStream();
-            java.io.File uploadFile = File.createTempFile(fileName, fileName.split("\\.")[1]);
-            FileUtils.copyInputStreamToFile(in, uploadFile);
-            filesStorageRepo.save(new FilesStorage(personRepo.getIdPerson(authToken), fileName, uploadFile));
+    public boolean uploadFile(String authToken, String fileName, MultipartFile file) throws IOException {
+        if (filesStorageRepo.findByName(fileName) != null) {
+            throw new InputData("Error input data");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        InputStream in = file.getInputStream();
+        java.io.File uploadFile = File.createTempFile(fileName, fileName.split("\\.")[1]);
+        FileUtils.copyInputStreamToFile(in, uploadFile);
+        filesStorageRepo.save(new FilesStorage(personRepo.getIdPerson(authToken), fileName, uploadFile));
+
+        return true;
     }
 
-    public void deletingFile(String authToken, String fileName) {
-        if (isError(authToken, fileName)) {
-            FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
-            if (filesStorage == null) {
-                throw new InputData("Error input data");
-            }
-            filesStorageRepo.delete(filesStorage);
+    public void deletingFile(String fileName) {
+        FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
+
+        if (filesStorage == null) {
+            throw new InputData("Error input data");
         }
+
+        filesStorageRepo.delete(filesStorage);
     }
 
-    public ResponseEntity getFile(String authToken, String fileName) throws IOException {
-        if (isError(authToken, fileName)) {
-            FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
-            if (filesStorage == null) {
-                throw new InputData("Error input data");
-            }
-            File file = filesStorage.getFile();
-            InputStream in = new FileInputStream(file);
-
-            return ResponseEntity.ok().body(new InputStreamResource(in));
+    public InputStream getFile(String fileName) throws IOException {
+        FilesStorage filesStorage = filesStorageRepo.findByName(fileName);
+        if (filesStorage == null) {
+            throw new InputData("Error input data");
         }
-        return null;
+
+        File file = filesStorage.getFile();
+
+        return new FileInputStream(file);
     }
 
-    public void editFileName(String authToken, String fileName, String newFileName) {
-        if (isError(authToken, fileName)) {
-            if (filesStorageRepo.findByName(fileName) == null) {
-                throw new InputData("Error input data");
-            }
-            filesStorageRepo.updateFileName(fileName, newFileName);
+    public void editFileName(String fileName, String newFileName) {
+        if (filesStorageRepo.findByName(fileName) == null) {
+            throw new InputData("Error input data");
         }
+
+        filesStorageRepo.updateFileName(fileName, newFileName);
     }
 
-    public ResponseEntity getAllFiles(String authToken, Integer limit) throws IOException {
-        if (!PersonService.getHashToken().containsKey(authToken)) {
-            throw new UnauthorizedUser("Unauthorized error");
-        }
+    public ResponseEntity getAllFiles(String authToken, Integer limit) {
 
         List<FilesStorage> filesStorageList = filesStorageRepo.findAllByCustomerId(personRepo.getIdPerson(authToken));
 
@@ -104,14 +95,5 @@ public class FilesStorageService {
         }
 
         return new ResponseEntity<>(userFileLimitList, HttpStatus.OK);
-    }
-
-    private boolean isError(String authToken, String fileName) {
-        if (!PersonService.getHashToken().containsKey(authToken)) {
-            throw new UnauthorizedUser("Unauthorized error");
-        } else if (fileName.isEmpty()) {
-            throw new InputData("Error input data");
-        }
-        return true;
     }
 }

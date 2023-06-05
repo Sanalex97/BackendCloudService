@@ -18,7 +18,7 @@ public class PersonController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity authorization(@RequestBody Person person) {
-        return personService.getUserAuthorization(person);
+        return new ResponseEntity<>(personService.getUserAuthorization(person), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
