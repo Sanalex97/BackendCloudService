@@ -1,4 +1,4 @@
-package com.example.backendcloudservice.service.file_storage;
+package com.example.backendcloudservice.service.files_storage;
 
 import com.example.backendcloudservice.entity.FilesStorage;
 import com.example.backendcloudservice.repository.FilesStorageRepo;
