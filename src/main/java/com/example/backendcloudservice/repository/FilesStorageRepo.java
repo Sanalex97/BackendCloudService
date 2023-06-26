@@ -1,6 +1,6 @@
 package com.example.backendcloudservice.repository;
 
-import com.example.backendcloudservice.entity.FilesStorage;
+import com.example.backendcloudservice.model.entity.FilesStorage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

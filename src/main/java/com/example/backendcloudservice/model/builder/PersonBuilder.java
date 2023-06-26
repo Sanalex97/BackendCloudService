@@ -1,6 +1,6 @@
-package com.example.backendcloudservice.entity.builder;
+package com.example.backendcloudservice.model.builder;
 
-import com.example.backendcloudservice.entity.Person;
+import com.example.backendcloudservice.model.entity.Person;
 
 public class PersonBuilder {
     protected String login;

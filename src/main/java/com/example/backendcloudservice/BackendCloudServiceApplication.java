@@ -1,14 +1,12 @@
 package com.example.backendcloudservice;
 
-import com.example.backendcloudservice.entity.Person;
-import com.example.backendcloudservice.entity.builder.PersonBuilder;
+import com.example.backendcloudservice.model.entity.Person;
+import com.example.backendcloudservice.model.builder.PersonBuilder;
 import com.example.backendcloudservice.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,4 +39,5 @@ public class BackendCloudServiceApplication implements CommandLineRunner {
 
         personRepo.saveAll(new ArrayList<>(Arrays.asList(person1, person2, person3)));
     }
+
 }

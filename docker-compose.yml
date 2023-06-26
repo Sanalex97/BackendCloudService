@@ -18,6 +18,11 @@ services:
                 "spring.jpa.hibernate.ddl-auto" : "create-drop"
               }'
 
+    volumes:
+      - ./logBackend.txt:/logBackend.txt
+    
+
+
   service-db:
     image: mysql:latest
     environment:

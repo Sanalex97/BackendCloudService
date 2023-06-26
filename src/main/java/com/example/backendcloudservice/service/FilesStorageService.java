@@ -2,7 +2,7 @@ package com.example.backendcloudservice.service;
 
 import com.example.backendcloudservice.eception.DeleteFile;
 import com.example.backendcloudservice.eception.InputData;
-import com.example.backendcloudservice.entity.FilesStorage;
+import com.example.backendcloudservice.model.entity.FilesStorage;
 import com.example.backendcloudservice.repository.FilesStorageRepo;
 import com.example.backendcloudservice.repository.PersonRepo;
 import org.apache.commons.io.FileUtils;

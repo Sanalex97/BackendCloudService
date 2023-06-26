@@ -1,4 +1,4 @@
-package com.example.backendcloudservice.entity;
+package com.example.backendcloudservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,13 +35,31 @@ public class FilesStorage {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public File getFile() {
         return file;
     }
 
-
+    public void setFile(File file) {
+        this.file = file;
+    }
 }

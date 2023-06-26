@@ -1,6 +1,6 @@
 package com.example.backendcloudservice.service.files_storage;
 
-import com.example.backendcloudservice.entity.FilesStorage;
+import com.example.backendcloudservice.model.entity.FilesStorage;
 import com.example.backendcloudservice.repository.FilesStorageRepo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

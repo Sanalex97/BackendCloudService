@@ -1,9 +1,6 @@
 package com.example.backendcloudservice.repository;
 
-import com.example.backendcloudservice.entity.Person;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.backendcloudservice.model.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
