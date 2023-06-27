@@ -20,7 +20,7 @@
   <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/d734ea82-b14e-4088-83b8-663a90308a41" title="spring" alt="spring" width="50" height="50"/>&nbsp
   <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/29623d20-16f7-42e6-972e-6256e0c10546" title="maven" alt="maven" width="50" height="50"/>&nbsp
   <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/4bced588-3a15-4822-9f32-ed63c965afce" title="docker" alt="docker" width="60" height="50"/>&nbsp
-  <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/f62a71d1-d938-4520-b8b4-5deb283edb89" title="postgreSQL" alt="postgreSQL" width="50" height="50"/>&nbsp
+  <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/08f82f97-faa5-435c-a47c-532fc103ca30" title="mySQL" alt="mySQL" width="50" height="50"/>&nbsp
   <img src="https://github.com/Sanalex97/BackendCloudService/assets/72032908/f3e1acd2-1593-4105-8f5e-d5e4e0a5726e" title="JUnit" alt="JUnit" width="70" height="50"/>&nbsp
 </div>
 
