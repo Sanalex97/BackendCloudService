@@ -20,25 +20,23 @@ public class PersonController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping("/login")
+    @PostMapping({"/login"})
     @ResponseBody
     public ResponseEntity authorization(@RequestBody PersonDto personDto) throws IOException {
-        System.out.println(personDto);
-        return new ResponseEntity<>(personService.getUserAuthorization(convertToEntity(personDto)), HttpStatus.OK);
+        return new ResponseEntity(this.personService.getUserAuthorization(convertToEntity(personDto)), HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity deletingToken(@RequestHeader(name = "auth-token") String authToken) {
-        personService.deletingToken(authToken.split(" ")[1]);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping({"/logout"})
+    public ResponseEntity deletingToken(@RequestHeader(name = "auth-token") String authToken) throws IOException {
+        this.personService.deletingToken(authToken.split(" ")[1]);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     private PersonDto convertToDto(Person person) {
-        return modelMapper.map(person, PersonDto.class);
+        return this.modelMapper.map(person, PersonDto.class);
     }
 
     private Person convertToEntity(PersonDto personDto) {
-        return modelMapper.map(personDto, Person.class);
+        return this.modelMapper.map(personDto, Person.class);
     }
-
 }

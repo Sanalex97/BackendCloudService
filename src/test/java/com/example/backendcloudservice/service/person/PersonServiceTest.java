@@ -47,9 +47,4 @@ class PersonServiceTest {
                         personService.getUserAuthorization(new Person("user1", "12345678", null)));
     }
 
-    @Test
-    void deletingToken() {
-
-    }
-
 }

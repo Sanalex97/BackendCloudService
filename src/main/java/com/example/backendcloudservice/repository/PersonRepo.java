@@ -13,4 +13,7 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
     @Query(value = "select p.id from Person p where p.authToken = :authToken")
     Long getIdPerson(String authToken);
+
+    @Query("select p.login from Person p where p.authToken = :authToken")
+    String getLoginPerson(String paramString);
 }

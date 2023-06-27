@@ -21,16 +21,22 @@ public class Logger {
         return logger;
     }
 
-    public void addLog(String mes) throws IOException {
+
+    public void addLog(String login, String mes) throws IOException {
         Date date = new Date(System.currentTimeMillis());
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter("logBackend.txt", true), true)) {
-
-            System.out.println(mes);
-
-            writer.println("[" + formatter.format(date) + " " + num++ + "] " + mes);
-
-
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("logBackend.txt", true), true);
+            try {
+                writer.println("[" + this.formatter.format(date) + " " + this.num++ + "] " + login + ":" + mes);
+                writer.close();
+            } catch (Throwable throwable) {
+                try {
+                    writer.close();
+                } catch (Throwable throwable1) {
+                    throwable.addSuppressed(throwable1);
+                }
+                throw throwable;
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
